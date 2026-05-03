@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1200" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="h1-distort" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.02" numOctaves="3" seed="1"></feTurbulence>
+      <feDisplacementMap in="SourceGraphic" scale="70"></feDisplacementMap>
+    </filter>
+    <filter id="h1-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="2.5" numOctaves="2" seed="12"></feTurbulence>
+      <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0"></feColorMatrix>
+    </filter>
+    <filter id="h1-cloud">
+      <feTurbulence type="fractalNoise" baseFrequency="0.005" numOctaves="4" seed="4"></feTurbulence>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.18 0"></feColorMatrix>
+    </filter>
+    <linearGradient id="h1-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f4eee2"></stop>
+      <stop offset="40%" stop-color="#e8dfc8"></stop>
+      <stop offset="100%" stop-color="#f4eee2"></stop>
+    </linearGradient>
+    <radialGradient id="h1-light" cx="25%" cy="20%" r="90%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.25)"></stop>
+      <stop offset="55%" stop-color="rgba(255,255,255,0)"></stop>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.18)"></stop>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1200" fill="url(#h1-bg)"></rect>
+  
+  <rect width="1920" height="1200" filter="url(#h1-cloud)" opacity="0.7"></rect>
+  
+  <g filter="url(#h1-distort)" opacity="0.85">
+    <path d="M -100 180 Q 480 60, 960 384 T 2020 480" stroke="#5a4426" stroke-width="5" fill="none" stroke-linecap="round"></path>
+    <path d="M -100 660 Q 672 504, 1152 780 T 2020 840" stroke="#5a4426" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M 576 -100 Q 864 480, 1248 840 T 1344 1300" stroke="#5a4426" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"></path>
+    <path d="M -100 1020 Q 768 936, 1344 1104 T 2020 1140" stroke="#b8924a" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"></path>
+  </g>
+  
+  <g filter="url(#h1-distort)" opacity="0.5">
+    <path d="M -100 360 Q 576 264, 1152 480 T 2020 540" stroke="#b8924a" stroke-width="1.2" fill="none"></path>
+    <path d="M -100 840 Q 768 744, 1344 936 T 2020 1020" stroke="#b8924a" stroke-width="0.9" fill="none"></path>
+    <path d="M 1056 -100 Q 768 360, 960 660 T 864 1300" stroke="#5a4426" stroke-width="0.7" fill="none"></path>
+  </g>
+  
+  <rect width="1920" height="1200" fill="url(#h1-light)"></rect>
+  
+  <rect width="1920" height="1200" filter="url(#h1-grain)" opacity="0.5"></rect>
+</svg>

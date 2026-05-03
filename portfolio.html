@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Portfólio — Petrara Mármores & Granitos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="sections.css" />
+</head>
+<body>
+<div id="app"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="shared.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const WORKS = [
+  { cat: "cozinha",  t: "Residência Itaim",      stone: "Calacatta Oro",     img: "assets/stones/01-calacatta.svg" },
+  { cat: "banheiro", t: "Master Suite Higienópolis", stone: "Mont Blanc",     img: "assets/stones/02-carrara.svg" },
+  { cat: "cozinha",  t: "Apartamento Vila Madalena",  stone: "Nero Marquina", img: "assets/stones/03-nero.svg" },
+  { cat: "fachada",  t: "Casa Granja Viana",     stone: "Travertino Romano", img: "assets/stones/04-verde.svg" },
+  { cat: "cozinha",  t: "Cozinha Gourmet Alto de Pinheiros", stone: "Quartzito Patagonia", img: "assets/stones/05-travertino.svg" },
+  { cat: "banheiro", t: "Lavabo Jardins",        stone: "Onyx Verde",        img: "assets/stones/06-graniteBrn.svg" },
+  { cat: "escada",   t: "Escada Vila Nova",       stone: "Granito Preto São Gabriel", img: "assets/stones/07-onyxAmber.svg" },
+  { cat: "comercial",t: "Hotel Boutique Trancoso", stone: "Calacatta Viola", img: "assets/stones/08-patagonia.svg" },
+  { cat: "cozinha",  t: "Penthouse Faria Lima",  stone: "Taj Mahal",         img: "assets/stones/09-bege.svg" },
+  { cat: "fachada",  t: "Fachada Brooklin",       stone: "Granito Cinza Andorinha", img: "assets/stones/10-graniteGry.svg" },
+  { cat: "comercial",t: "Restaurante Pinheiros", stone: "Quartzito Macaúbas", img: "assets/stones/11-rosaPort.svg" },
+  { cat: "banheiro", t: "Suíte Master Vila Nova", stone: "Calacatta Borghini", img: "assets/stones/12-azulMacaub.svg" },
+];
+
+const FILTERS = [
+  { k: "all", label: "Todos" },
+  { k: "cozinha", label: "Cozinhas" },
+  { k: "banheiro", label: "Banheiros" },
+  { k: "escada", label: "Escadas" },
+  { k: "fachada", label: "Fachadas" },
+  { k: "comercial", label: "Comercial" },
+];
+
+function App() {
+  const [modal, setModal] = useState(false);
+  const [filter, setFilter] = useState("all");
+  useReveal();
+
+  const items = filter === "all" ? WORKS : WORKS.filter((w) => w.cat === filter);
+
+  return (
+    <>
+      <Topbar />
+      <Header active="portfolio" onCTAClick={() => setModal(true)} />
+      <section className="page-hero">
+        <div className="container">
+          <div className="crumbs">Home <span style={{margin:"0 10px"}}>/</span> <span style={{color:"var(--accent-2)"}}>Portfólio</span></div>
+          <h1 className="title-display">Confira alguns dos<br/>nossos trabalhos.</h1>
+          <p>Da cozinha familiar ao hotel boutique — mais de 1.200 obras assinadas em pedras nobres desde 2008.</p>
+        </div>
+      </section>
+
+      <section className="section-pad-sm">
+        <div className="container">
+          <div className="filters reveal">
+            {FILTERS.map((f) => (
+              <button key={f.k} className={`filter-pill ${filter === f.k ? "is-on" : ""}`} onClick={() => setFilter(f.k)}>
+                {f.label} {filter === f.k && <span style={{ marginLeft: 8, opacity: 0.6 }}>{items.length}</span>}
+              </button>
+            ))}
+          </div>
+          <div className="container work-grid reveal" style={{ padding: 0 }}>
+            {items.map((w, i) => (
+              <a key={i} className="work-card" href="produto.html">
+                <div className="work-img" style={{ backgroundImage: `url(${w.img})` }} />
+                <div className="work-meta">
+                  <div>
+                    <span className="work-tag">— {w.stone}</span>
+                    <h3 className="work-t">{w.t}</h3>
+                  </div>
+                  <span className="work-arrow"><Icon.Arrow /></span>
+                </div>
+              </a>
+            ))}
+          </div>
+          <div style={{ textAlign: "center", marginTop: 60 }}>
+            <button className="btn btn-outline">Carregar mais projetos</button>
+          </div>
+        </div>
+      </section>
+
+      <Newsletter />
+      <Footer />
+      <Floaters />
+      <QuoteModal open={modal} onClose={() => setModal(false)} />
+    </>
+  );
+}
+ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+</script>
+</body>
+</html>

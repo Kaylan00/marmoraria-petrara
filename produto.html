@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Calacatta Oro — Petrara Mármores & Granitos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="sections.css" />
+</head>
+<body class="product-page">
+<div id="app"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="shared.jsx"></script>
+
+<script type="text/babel">
+const { useState } = React;
+
+const GALLERY = [
+  "assets/stones/01-calacatta.svg",
+  "assets/stones/02-carrara.svg",
+  "assets/stones/03-nero.svg",
+  "assets/stones/04-verde.svg",
+];
+const FINISHES = ["Polido", "Levigado", "Escovado", "Acetinado"];
+const RELATED = [
+  { t: "Mont Blanc",      sub: "Quartzito · Brasil",  img: "assets/stones/05-travertino.svg" },
+  { t: "Nero Marquina",   sub: "Mármore · Espanha",   img: "assets/stones/06-graniteBrn.svg" },
+  { t: "Taj Mahal",       sub: "Quartzito · Brasil",  img: "assets/stones/07-onyxAmber.svg" },
+  { t: "Calacatta Viola", sub: "Mármore · Itália",    img: "assets/stones/08-patagonia.svg" },
+];
+
+function App() {
+  const [modal, setModal] = useState(false);
+  const [imgIdx, setImg] = useState(0);
+  const [finish, setFinish] = useState("Polido");
+  const [tab, setTab] = useState("desc");
+  useReveal();
+
+  return (
+    <>
+      <Topbar />
+      <Header active="produto" onCTAClick={() => setModal(true)} />
+
+      <section className="section-pad-sm">
+        <div className="container">
+          <div className="product-top">
+            <div className="product-gallery reveal">
+              <div className="product-main-img" style={{ backgroundImage: `url(${GALLERY[imgIdx]})` }}>
+                <span className="product-main-tag">Bloco · 320 × 180 cm</span>
+              </div>
+              <div className="product-thumbs">
+                {GALLERY.map((src, i) => (
+                  <button key={i} className={`product-thumb ${i === imgIdx ? "is-on" : ""}`}
+                    style={{ backgroundImage: `url(${src})` }}
+                    onClick={() => setImg(i)}
+                    aria-label={`Imagem ${i + 1}`} />
+                ))}
+              </div>
+            </div>
+
+            <div className="product-info reveal">
+              <div className="crumbs">Produtos · Mármores · Itália</div>
+              <h1>Calacatta Oro</h1>
+              <p className="lead">
+                Mármore italiano extraído nas montanhas de Carrara. Fundo branco-puro,
+                veios dourados e cinza-grafite que desenham movimentos longos e nítidos.
+                Ideal para bancadas, lavatórios esculpidos e revestimentos de destaque.
+              </p>
+
+              <div className="product-spec">
+                <div className="product-spec-row">
+                  <span className="product-spec-label">Origem</span>
+                  <span className="product-spec-val">Carrara, Itália</span>
+                </div>
+                <div className="product-spec-row">
+                  <span className="product-spec-label">Tipo</span>
+                  <span className="product-spec-val">Mármore</span>
+                </div>
+                <div className="product-spec-row">
+                  <span className="product-spec-label">Espessura</span>
+                  <span className="product-spec-val">2cm · 3cm</span>
+                </div>
+                <div className="product-spec-row">
+                  <span className="product-spec-label">Dureza (Mohs)</span>
+                  <span className="product-spec-val">3 — 4</span>
+                </div>
+                <div className="product-spec-row">
+                  <span className="product-spec-label">Absorção</span>
+                  <span className="product-spec-val">0,2%</span>
+                </div>
+                <div className="product-spec-row">
+                  <span className="product-spec-label">Estoque</span>
+                  <span className="product-spec-val" style={{ color: "var(--accent)" }}>● 6 chapas no galpão</span>
+                </div>
+              </div>
+
+              <div className="product-finish">
+                <label className="field-label">Acabamento</label>
+                <div className="product-finish-options">
+                  {FINISHES.map((f) => (
+                    <button key={f} className={`product-finish-pill ${finish === f ? "is-on" : ""}`} onClick={() => setFinish(f)}>{f}</button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="product-actions">
+                <button className="btn btn-primary" onClick={() => setModal(true)}>Solicitar Orçamento <Icon.Arrow /></button>
+                <a className="btn btn-outline" href="portfolio.html">Ver projetos com esta pedra</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="product-tabs">
+            {[
+              { k: "desc", label: "Descrição" },
+              { k: "uso",  label: "Usos recomendados" },
+              { k: "cuid", label: "Cuidados" },
+              { k: "tec",  label: "Ficha técnica" },
+            ].map((b) => (
+              <button key={b.k} className={`product-tab ${tab === b.k ? "is-on" : ""}`} onClick={() => setTab(b.k)}>{b.label}</button>
+            ))}
+          </div>
+
+          <div className="product-tab-body">
+            {tab === "desc" && <>
+              <div>
+                <p>O Calacatta Oro é considerado um dos mármores mais nobres extraídos no mundo. Sua veiação dourada e cinza, contra o fundo branco-puro, dá ao material uma identidade quase pictórica — cada chapa é, de fato, irrepetível.</p>
+                <p>Por ser uma pedra calcária, exige instalação cuidadosa e seladores específicos para garantir durabilidade em ambientes molhados ou de uso intenso.</p>
+              </div>
+              <div>
+                <p>Trabalhamos exclusivamente com chapas inteiras, vindas diretamente da pedreira italiana. Você visita o galpão, escolhe o bloco, marca os melhores veios — e a paginação é desenhada antes do corte.</p>
+                <p>Para arquitetos, oferecemos amostras físicas e renderização da paginação aprovada antes da produção.</p>
+              </div>
+            </>}
+            {tab === "uso" && <>
+              <ul>
+                <li>Bancadas de cozinha (com selador de uso periódico)</li>
+                <li>Lavatórios e bancadas de banheiro</li>
+                <li>Revestimentos verticais — paredes de destaque</li>
+                <li>Mesas, bancadas de bar e ilhas centrais</li>
+                <li>Painéis decorativos e adornos esculpidos</li>
+              </ul>
+              <ul>
+                <li>Não recomendado para áreas externas com chuva ácida</li>
+                <li>Evite contato direto com vinagre, limão e produtos abrasivos</li>
+                <li>Para uso intensivo, considere acabamento levigado</li>
+              </ul>
+            </>}
+            {tab === "cuid" && <>
+              <p>A limpeza diária deve ser feita apenas com pano úmido e sabão neutro. Selantes hidro-oleofóbicos devem ser reaplicados a cada 12 a 18 meses, dependendo da exposição.</p>
+              <p>Em caso de manchas, evite produtos ácidos — temos um kit de manutenção específico que enviamos junto com o projeto entregue.</p>
+            </>}
+            {tab === "tec" && <>
+              <ul>
+                <li>Densidade: 2.700 kg/m³</li>
+                <li>Resistência à compressão: 110 MPa</li>
+                <li>Resistência à flexão: 12 MPa</li>
+                <li>Coeficiente de dilatação térmica: 6,5 × 10⁻⁶ /°C</li>
+              </ul>
+              <ul>
+                <li>Norma de classificação: ABNT NBR 15012</li>
+                <li>Origem: Carrara, Toscana — Itália</li>
+                <li>Certificação ambiental da pedreira</li>
+              </ul>
+            </>}
+          </div>
+        </div>
+      </section>
+
+      <section className="product-related">
+        <div className="container">
+          <div className="reveal" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 36, gap: 20, flexWrap: "wrap" }}>
+            <div>
+              <div className="eyebrow">— Você também pode gostar</div>
+              <h2 style={{ margin: "12px 0 0" }}>Pedras complementares</h2>
+            </div>
+            <a className="btn btn-outline btn-sm" href="portfolio.html">Ver tudo</a>
+          </div>
+          <div className="related-grid reveal">
+            {RELATED.map((r, i) => (
+              <a key={i} className="related-card" href="#">
+                <div className="related-img" style={{ backgroundImage: `url(${r.img})` }} />
+                <h3>{r.t}</h3>
+                <span>{r.sub}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Newsletter />
+      <Footer />
+      <Floaters />
+      <QuoteModal open={modal} onClose={() => setModal(false)} />
+    </>
+  );
+}
+ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+</script>
+</body>
+</html>
