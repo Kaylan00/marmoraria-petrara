@@ -258,7 +258,10 @@ function Footer() {
         </div>
         <div className="footer-bar">
           <div>© 2026 Petrara — Mármores &amp; Granitos. Todos os direitos reservados.</div>
-          <div>Curadoria de pedras desde 2008</div>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+            <span>Curadoria de pedras desde 2008</span>
+            <span style={{ fontSize: 11, color: "rgba(255,255,255,.35)" }}>Desenvolvido por Kaylan Argollo</span>
+          </div>
         </div>
       </div>
     </footer>
