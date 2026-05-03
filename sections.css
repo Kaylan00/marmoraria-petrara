@@ -27,6 +27,7 @@
   opacity: 0;
   transform: scale(1.06);
   transition: opacity 1.4s ease, transform 8s ease;
+  will-change: opacity, transform;
 }
 .hero-bg.is-on {
   opacity: 1;

@@ -501,34 +501,28 @@ function QuoteModal({ open, onClose }) {
 // ────────────────────────────────────────────────────────────────────────
 function useReveal() {
   useEffect(() => {
-    let raf;
-    const run = () => {
-      const els = document.querySelectorAll(".reveal:not(.is-in)");
-      if (!("IntersectionObserver" in window) || els.length === 0) {
-        els.forEach((el) => el.classList.add("is-in"));
-        return;
-      }
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("is-in");
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.05, rootMargin: "0px 0px -40px 0px" });
-      els.forEach((el) => {
-        const r = el.getBoundingClientRect();
-        if (r.top < window.innerHeight && r.bottom > 0) {
-          el.classList.add("is-in");
-        } else {
-          io.observe(el);
+    const els = document.querySelectorAll(".reveal");
+    if (!("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-in"));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-in");
+          io.unobserve(e.target);
         }
       });
-    };
-    raf = requestAnimationFrame(run);
-    const onScroll = () => requestAnimationFrame(run);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("scroll", onScroll); };
+    }, { threshold: 0.05, rootMargin: "0px 0px -40px 0px" });
+    els.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) {
+        el.classList.add("is-in");
+      } else {
+        io.observe(el);
+      }
+    });
+    return () => io.disconnect();
   }, []);
 }
 
