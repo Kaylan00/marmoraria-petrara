@@ -242,7 +242,7 @@ a { color: inherit; text-decoration: none; }
   padding-bottom: 10px;
   transition: height .3s ease, padding .3s ease;
 }
-.header.is-scrolled .header-inner { height: 76px; padding-bottom: 6px; }
+.header.is-scrolled .header-inner { height: 88px; padding-bottom: 10px; }
 
 .logo {
   display: flex;
