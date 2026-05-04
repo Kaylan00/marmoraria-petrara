@@ -122,7 +122,7 @@ function Topbar() {
 // ────────────────────────────────────────────────────────────────────────
 // Header (sticky w/ scroll state)
 // ────────────────────────────────────────────────────────────────────────
-function Header({ active = "home", transparent = false, onCTAClick }) {
+function Header({ active = "home", transparent = false, onCTAClick, onPortfolioClick, onProdutoClick }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
@@ -145,8 +145,8 @@ function Header({ active = "home", transparent = false, onCTAClick }) {
           <a href="index.html" className={`nav-link ${active === "home" ? "is-active" : ""}`}>Home</a>
           <a href="index.html#sobre" className="nav-link">Sobre</a>
           <a href="index.html#servicos" className="nav-link">Serviços</a>
-          <a href="produto.html" className={`nav-link ${active === "produto" ? "is-active" : ""}`}>Produtos</a>
-          <a href="portfolio.html" className={`nav-link ${active === "portfolio" ? "is-active" : ""}`}>Portfólio</a>
+          <button className="nav-link nav-link-btn" onClick={onProdutoClick}>Produtos</button>
+          <button className="nav-link nav-link-btn" onClick={onPortfolioClick}>Portfólio</button>
           <a href="index.html#depoimentos" className="nav-link">Depoimentos</a>
           <a href="index.html#blog" className="nav-link">Blog</a>
         </nav>
@@ -171,8 +171,8 @@ function Header({ active = "home", transparent = false, onCTAClick }) {
             <a href="index.html" onClick={close}>Home</a>
             <a href="index.html#sobre" onClick={close}>Sobre</a>
             <a href="index.html#servicos" onClick={close}>Serviços</a>
-            <a href="produto.html" onClick={close}>Produtos</a>
-            <a href="portfolio.html" onClick={close}>Portfólio</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); close(); onProdutoClick && onProdutoClick(); }}>Produtos</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); close(); onPortfolioClick && onPortfolioClick(); }}>Portfólio</a>
             <a href="index.html#depoimentos" onClick={close}>Depoimentos</a>
             <a href="index.html#blog" onClick={close}>Blog</a>
           </nav>
@@ -549,7 +549,192 @@ function Newsletter() {
   );
 }
 
+// ────────────────────────────────────────────────────────────────────────
+// PortfolioModal — grade de obras com filtros
+// ────────────────────────────────────────────────────────────────────────
+const WORKS = [
+  { cat: "cozinha",   t: "Residência Itaim",                stone: "Calacatta Oro",              img: window.STONE_IMG?.slabWhite    || "" },
+  { cat: "banheiro",  t: "Master Suite Higienópolis",        stone: "Mont Blanc",                 img: window.STONE_IMG?.slabVerde    || "" },
+  { cat: "cozinha",   t: "Apartamento Vila Madalena",        stone: "Nero Marquina",              img: window.STONE_IMG?.slabDark     || "" },
+  { cat: "fachada",   t: "Casa Granja Viana",                stone: "Travertino Romano",          img: window.STONE_IMG?.slabTrav     || "" },
+  { cat: "cozinha",   t: "Cozinha Gourmet Alto de Pinheiros",stone: "Quartzito Patagonia",        img: window.STONE_IMG?.slabBeige    || "" },
+  { cat: "banheiro",  t: "Lavabo Jardins",                   stone: "Onyx Verde",                 img: window.STONE_IMG?.slabOnyx     || "" },
+  { cat: "escada",    t: "Escada Vila Nova",                 stone: "Granito Preto São Gabriel",  img: window.STONE_IMG?.roomBath     || "" },
+  { cat: "comercial", t: "Hotel Boutique Trancoso",          stone: "Calacatta Viola",            img: window.STONE_IMG?.roomLiving   || "" },
+  { cat: "cozinha",   t: "Penthouse Faria Lima",             stone: "Taj Mahal",                  img: window.STONE_IMG?.roomKitchen  || "" },
+  { cat: "fachada",   t: "Fachada Brooklin",                 stone: "Granito Cinza Andorinha",    img: window.STONE_IMG?.roomFacade   || "" },
+  { cat: "comercial", t: "Restaurante Pinheiros",            stone: "Quartzito Macaúbas",         img: window.STONE_IMG?.roomHotel    || "" },
+  { cat: "banheiro",  t: "Suíte Master Vila Nova",           stone: "Calacatta Borghini",         img: window.STONE_IMG?.slabRosa     || "" },
+];
+const PORT_FILTERS = [
+  { k: "all", label: "Todos" },
+  { k: "cozinha",   label: "Cozinhas" },
+  { k: "banheiro",  label: "Banheiros" },
+  { k: "escada",    label: "Escadas" },
+  { k: "fachada",   label: "Fachadas" },
+  { k: "comercial", label: "Comercial" },
+];
+
+function PortfolioModal({ open, onClose, onQuote, onProduto }) {
+  const [filter, setFilter] = useState("all");
+  useEffect(() => {
+    if (open) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape" && open) onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  const items = filter === "all" ? WORKS : WORKS.filter((w) => w.cat === filter);
+  if (!open) return null;
+
+  return (
+    <div className="page-modal-overlay" onClick={onClose}>
+      <div className="page-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="page-modal-head">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 4 }}>— Nossos projetos</div>
+            <h2 style={{ margin: 0 }}>Portfólio</h2>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <button className="btn btn-primary btn-sm" onClick={() => { onClose(); onQuote && onQuote(); }}>Solicitar Orçamento</button>
+            <button className="page-modal-close" onClick={onClose} aria-label="Fechar">×</button>
+          </div>
+        </div>
+        <div className="page-modal-body">
+          <div className="filters" style={{ marginBottom: 32 }}>
+            {PORT_FILTERS.map((f) => (
+              <button key={f.k} className={`filter-pill ${filter === f.k ? "is-on" : ""}`} onClick={() => setFilter(f.k)}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+          <div className="work-grid">
+            {items.map((w, i) => (
+              <a key={i} className="work-card" href="#" onClick={(e) => { e.preventDefault(); onClose(); onProduto && onProduto(w); }}>
+                <div className="work-img" style={{ backgroundImage: `url(${w.img})` }} />
+                <div className="work-meta">
+                  <div>
+                    <span className="work-tag">— {w.stone}</span>
+                    <h3 className="work-t">{w.t}</h3>
+                  </div>
+                  <span className="work-arrow"><Icon.Arrow /></span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// ProdutoModal — detalhe de pedra/produto
+// ────────────────────────────────────────────────────────────────────────
+const PRODUTO_DEFAULT = {
+  nome: "Calacatta Oro",
+  origem: "Carrara, Itália",
+  tipo: "Mármore",
+  desc: "Mármore italiano extraído nas montanhas de Carrara. Fundo branco-puro, veios dourados e cinza-grafite que desenham movimentos longos e nítidos. Ideal para bancadas, lavatórios esculpidos e revestimentos de destaque.",
+  imgs: [],
+};
+const FINISHES = ["Polido", "Levigado", "Escovado", "Acetinado"];
+const PROD_TABS = [
+  { k: "desc", label: "Descrição" },
+  { k: "uso",  label: "Usos" },
+  { k: "cuid", label: "Cuidados" },
+  { k: "tec",  label: "Ficha técnica" },
+];
+
+function ProdutoModal({ open, onClose, onQuote, onPortfolio, produto }) {
+  const [finish, setFinish] = useState("Polido");
+  const [tab, setTab] = useState("desc");
+  const p = produto || PRODUTO_DEFAULT;
+
+  useEffect(() => {
+    if (open) { document.body.style.overflow = "hidden"; setTab("desc"); setFinish("Polido"); }
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape" && open) onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="page-modal-overlay" onClick={onClose}>
+      <div className="page-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="page-modal-head">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 4 }}>— {p.tipo} · {p.origem}</div>
+            <h2 style={{ margin: 0 }}>{p.nome || p.stone || "Calacatta Oro"}</h2>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <button className="btn btn-outline btn-sm" onClick={() => { onClose(); onPortfolio && onPortfolio(); }}>Ver no portfólio</button>
+            <button className="page-modal-close" onClick={onClose} aria-label="Fechar">×</button>
+          </div>
+        </div>
+        <div className="page-modal-body">
+          <div className="produto-modal-top">
+            <div className="produto-modal-img" style={{ backgroundImage: `url(${p.img || ""})` }} />
+            <div className="produto-modal-info">
+              <p className="lead" style={{ marginTop: 0 }}>{p.desc || PRODUTO_DEFAULT.desc}</p>
+              <div className="product-spec">
+                {[
+                  ["Origem", p.origem || "Carrara, Itália"],
+                  ["Tipo", p.tipo || "Mármore"],
+                  ["Espessura", "2 cm · 3 cm"],
+                  ["Dureza (Mohs)", "3 — 4"],
+                  ["Absorção", "0,2%"],
+                ].map(([k, v]) => (
+                  <div key={k} className="product-spec-row">
+                    <span className="product-spec-label">{k}</span>
+                    <span className="product-spec-val">{v}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="product-finish">
+                <label className="field-label">Acabamento</label>
+                <div className="product-finish-options">
+                  {FINISHES.map((f) => (
+                    <button key={f} className={`product-finish-pill ${finish === f ? "is-on" : ""}`} onClick={() => setFinish(f)}>{f}</button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ marginTop: 24 }}>
+                <button className="btn btn-primary" onClick={() => { onClose(); onQuote && onQuote(); }}>
+                  Solicitar Orçamento <Icon.Arrow />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="product-tabs" style={{ marginTop: 40 }}>
+            {PROD_TABS.map((b) => (
+              <button key={b.k} className={`product-tab ${tab === b.k ? "is-on" : ""}`} onClick={() => setTab(b.k)}>{b.label}</button>
+            ))}
+          </div>
+          <div className="product-tab-body">
+            {tab === "desc" && <p>Mármore de origem italiana com fundo branco-puro e veiação dourada e cinza-grafite irrepetível. Trabalhamos com chapas inteiras da pedreira — você visita o galpão e escolhe o bloco antes do corte.</p>}
+            {tab === "uso" && <ul style={{ paddingLeft: 20, lineHeight: 2 }}><li>Bancadas de cozinha</li><li>Lavatórios e banheiros</li><li>Revestimentos verticais</li><li>Mesas e ilhas centrais</li><li>Painéis decorativos</li></ul>}
+            {tab === "cuid" && <p>Limpeza com pano úmido e sabão neutro. Selante hidro-oleofóbico a cada 12–18 meses. Evite ácidos (limão, vinagre) e abrasivos.</p>}
+            {tab === "tec" && <ul style={{ paddingLeft: 20, lineHeight: 2 }}><li>Densidade: 2.700 kg/m³</li><li>Resistência à compressão: 110 MPa</li><li>Dureza Mohs: 3–4</li><li>Norma: ABNT NBR 15012</li></ul>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // expose globals
 Object.assign(window, {
   Icon, Logo, LogoGlyph, Topbar, Header, Footer, Floaters, QuoteModal, Newsletter, useReveal,
+  PortfolioModal, ProdutoModal,
 });

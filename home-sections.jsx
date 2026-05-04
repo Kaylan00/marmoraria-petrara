@@ -263,7 +263,8 @@ const PORTFOLIO_IMGS = [
   "assets/stones/10-graniteGry.svg",
   "assets/stones/11-rosaPort.svg",
 ];
-function PortfolioGrid() {
+function PortfolioGrid({ onPortfolioClick }) {
+  const open = (e) => { e.preventDefault(); onPortfolioClick && onPortfolioClick(); };
   return (
     <section className="section-pad section-portfolio" id="portfolio">
       <div className="container center-head reveal">
@@ -272,7 +273,7 @@ function PortfolioGrid() {
       </div>
       <div className="container portfolio-grid reveal">
         {PORTFOLIO_IMGS.map((src, i) => (
-          <a key={i} className="portfolio-cell" href="portfolio.html" style={{ backgroundImage: `url(${src})` }}>
+          <a key={i} className="portfolio-cell" href="#" onClick={open} style={{ backgroundImage: `url(${src})` }}>
             <div className="portfolio-cell-overlay">
               <span>Ver projeto</span>
               <Icon.Arrow />
@@ -281,7 +282,7 @@ function PortfolioGrid() {
         ))}
       </div>
       <div className="container" style={{ textAlign: "center", marginTop: 50 }}>
-        <a className="btn btn-outline" href="portfolio.html">Ver portfólio completo</a>
+        <button className="btn btn-outline" onClick={onPortfolioClick}>Ver portfólio completo</button>
       </div>
     </section>
   );
