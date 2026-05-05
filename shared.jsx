@@ -125,6 +125,8 @@ function Topbar() {
 function Header({ active = "home", transparent = false, onCTAClick }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [inicioOpen, setInicioOpen] = useState(false);
+  const inicioRef = useRef(null);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     onScroll();
@@ -135,6 +137,14 @@ function Header({ active = "home", transparent = false, onCTAClick }) {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
+  useEffect(() => {
+    if (!inicioOpen) return;
+    const onClickOut = (e) => {
+      if (inicioRef.current && !inicioRef.current.contains(e.target)) setInicioOpen(false);
+    };
+    document.addEventListener("mousedown", onClickOut);
+    return () => document.removeEventListener("mousedown", onClickOut);
+  }, [inicioOpen]);
   const isTransparent = transparent && !scrolled;
   const close = () => setMenuOpen(false);
   return (
@@ -142,13 +152,25 @@ function Header({ active = "home", transparent = false, onCTAClick }) {
       <div className="container header-inner">
         <Logo />
         <nav className="nav">
-          <a href="index.html" className={`nav-link ${active === "home" ? "is-active" : ""}`}>Home</a>
-          <a href="index.html#sobre" className="nav-link">Sobre</a>
-          <a href="index.html#servicos" className="nav-link">Serviços</a>
+          <div className="nav-dropdown" ref={inicioRef}>
+            <button
+              className={`nav-link nav-dropdown-trigger ${active === "home" ? "is-active" : ""}`}
+              onClick={() => setInicioOpen(v => !v)}
+              aria-expanded={inicioOpen}
+            >
+              Início <span className={`nav-dropdown-arrow ${inicioOpen ? "is-open" : ""}`}>▾</span>
+            </button>
+            {inicioOpen && (
+              <div className="nav-dropdown-menu">
+                <a href="index.html#sobre" className="nav-dropdown-item" onClick={() => setInicioOpen(false)}>Sobre</a>
+                <a href="index.html#servicos" className="nav-dropdown-item" onClick={() => setInicioOpen(false)}>Serviços</a>
+                <a href="index.html#depoimentos" className="nav-dropdown-item" onClick={() => setInicioOpen(false)}>Depoimentos</a>
+                <a href="index.html#blog" className="nav-dropdown-item" onClick={() => setInicioOpen(false)}>Blog</a>
+              </div>
+            )}
+          </div>
           <a href="produto.html" className={`nav-link ${active === "produto" ? "is-active" : ""}`}>Produtos</a>
           <a href="portfolio.html" className={`nav-link ${active === "portfolio" ? "is-active" : ""}`}>Portfólio</a>
-          <a href="index.html#depoimentos" className="nav-link">Depoimentos</a>
-          <a href="index.html#blog" className="nav-link">Blog</a>
         </nav>
         <button className="btn btn-outline btn-sm header-cta" onClick={onCTAClick}>Solicitar Orçamento</button>
         <button
@@ -168,7 +190,7 @@ function Header({ active = "home", transparent = false, onCTAClick }) {
             <button className="mobile-drawer-close" onClick={close} aria-label="Fechar">×</button>
           </div>
           <nav className="mobile-nav">
-            <a href="index.html" onClick={close}>Home</a>
+            <a href="index.html" onClick={close}>Início</a>
             <a href="index.html#sobre" onClick={close}>Sobre</a>
             <a href="index.html#servicos" onClick={close}>Serviços</a>
             <a href="produto.html" onClick={close}>Produtos</a>

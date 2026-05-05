@@ -307,6 +307,57 @@ a { color: inherit; text-decoration: none; }
   border-radius: 50%;
   background: var(--accent);
 }
+.nav-dropdown {
+  position: relative;
+}
+.nav-dropdown-trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 0;
+}
+.nav-dropdown-arrow {
+  font-size: 10px;
+  transition: transform .2s;
+  display: inline-block;
+}
+.nav-dropdown-arrow.is-open {
+  transform: rotate(180deg);
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+  padding: 8px 0;
+  min-width: 160px;
+  z-index: 200;
+  animation: dropdownIn .15s ease;
+}
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.nav-dropdown-item {
+  display: block;
+  padding: 9px 20px;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: color .15s, background .15s;
+}
+.nav-dropdown-item:hover {
+  color: var(--accent);
+  background: var(--stone-1, #f7f5f2);
+}
 
 /* Section primitives */
 section { position: relative; }
