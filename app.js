@@ -825,6 +825,8 @@ function Header({
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [inicioOpen, setInicioOpen] = useState(false);
+  const inicioRef = useRef(null);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     onScroll();
@@ -839,6 +841,14 @@ function Header({
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
+  useEffect(() => {
+    if (!inicioOpen) return;
+    const onClickOut = (e) => {
+      if (inicioRef.current && !inicioRef.current.contains(e.target)) setInicioOpen(false);
+    };
+    document.addEventListener("mousedown", onClickOut);
+    return () => document.removeEventListener("mousedown", onClickOut);
+  }, [inicioOpen]);
   const isTransparent = transparent && !scrolled;
   const close = () => setMenuOpen(false);
   return /*#__PURE__*/React.createElement("header", {
@@ -847,28 +857,40 @@ function Header({
     className: "container header-inner"
   }, /*#__PURE__*/React.createElement(Logo, null), /*#__PURE__*/React.createElement("nav", {
     className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-dropdown",
+    ref: inicioRef
+  }, /*#__PURE__*/React.createElement("button", {
+    className: `nav-link nav-dropdown-trigger ${active === "home" ? "is-active" : ""}`,
+    onClick: () => setInicioOpen(v => !v),
+    "aria-expanded": inicioOpen
+  }, "In\xEDcio ", /*#__PURE__*/React.createElement("span", {
+    className: `nav-dropdown-arrow ${inicioOpen ? "is-open" : ""}`
+  }, "\u25be")), inicioOpen && /*#__PURE__*/React.createElement("div", {
+    className: "nav-dropdown-menu"
   }, /*#__PURE__*/React.createElement("a", {
-    href: "index.html",
-    className: `nav-link ${active === "home" ? "is-active" : ""}`
-  }, "Home"), /*#__PURE__*/React.createElement("a", {
     href: "index.html#sobre",
-    className: "nav-link"
+    className: "nav-dropdown-item",
+    onClick: () => setInicioOpen(false)
   }, "Sobre"), /*#__PURE__*/React.createElement("a", {
     href: "index.html#servicos",
-    className: "nav-link"
+    className: "nav-dropdown-item",
+    onClick: () => setInicioOpen(false)
   }, "Servi\xE7os"), /*#__PURE__*/React.createElement("a", {
+    href: "index.html#depoimentos",
+    className: "nav-dropdown-item",
+    onClick: () => setInicioOpen(false)
+  }, "Depoimentos"), /*#__PURE__*/React.createElement("a", {
+    href: "index.html#blog",
+    className: "nav-dropdown-item",
+    onClick: () => setInicioOpen(false)
+  }, "Blog"))), /*#__PURE__*/React.createElement("a", {
     href: "produto.html",
     className: `nav-link ${active === "produto" ? "is-active" : ""}`
   }, "Produtos"), /*#__PURE__*/React.createElement("a", {
     href: "portfolio.html",
     className: `nav-link ${active === "portfolio" ? "is-active" : ""}`
-  }, "Portf\xF3lio"), /*#__PURE__*/React.createElement("a", {
-    href: "index.html#depoimentos",
-    className: "nav-link"
-  }, "Depoimentos"), /*#__PURE__*/React.createElement("a", {
-    href: "index.html#blog",
-    className: "nav-link"
-  }, "Blog")), /*#__PURE__*/React.createElement("button", {
+  }, "Portf\xF3lio")), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-outline btn-sm header-cta",
     onClick: onCTAClick
   }, "Solicitar Or\xE7amento"), /*#__PURE__*/React.createElement("button", {
@@ -893,7 +915,7 @@ function Header({
   }, /*#__PURE__*/React.createElement("a", {
     href: "index.html",
     onClick: close
-  }, "Home"), /*#__PURE__*/React.createElement("a", {
+  }, "In\xEDcio"), /*#__PURE__*/React.createElement("a", {
     href: "index.html#sobre",
     onClick: close
   }, "Sobre"), /*#__PURE__*/React.createElement("a", {
@@ -922,7 +944,6 @@ function Header({
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Icon.Whats, null), " (11) 94512-8800"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Icon.Phone, null), " (11) 3045-2200"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Icon.Pin, null), " Av. Faria Lima, 2840 \u2014 S\xE3o Paulo")))));
 }
 
-// ────────────────────────────────────────────────────────────────────────
 // Footer
 // ────────────────────────────────────────────────────────────────────────
 function Footer() {
