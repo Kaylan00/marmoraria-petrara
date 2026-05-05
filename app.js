@@ -821,9 +821,7 @@ function Topbar() {
 function Header({
   active = "home",
   transparent = false,
-  onCTAClick,
-  onPortfolioClick,
-  onProdutoClick
+  onCTAClick
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -858,12 +856,12 @@ function Header({
   }, "Sobre"), /*#__PURE__*/React.createElement("a", {
     href: "index.html#servicos",
     className: "nav-link"
-  }, "Servi\xE7os"), /*#__PURE__*/React.createElement("button", {
-    className: "nav-link nav-link-btn",
-    onClick: onProdutoClick
-  }, "Produtos"), /*#__PURE__*/React.createElement("button", {
-    className: "nav-link nav-link-btn",
-    onClick: onPortfolioClick
+  }, "Servi\xE7os"), /*#__PURE__*/React.createElement("a", {
+    href: "produto.html",
+    className: `nav-link ${active === "produto" ? "is-active" : ""}`
+  }, "Produtos"), /*#__PURE__*/React.createElement("a", {
+    href: "portfolio.html",
+    className: `nav-link ${active === "portfolio" ? "is-active" : ""}`
   }, "Portf\xF3lio"), /*#__PURE__*/React.createElement("a", {
     href: "index.html#depoimentos",
     className: "nav-link"
@@ -902,19 +900,11 @@ function Header({
     href: "index.html#servicos",
     onClick: close
   }, "Servi\xE7os"), /*#__PURE__*/React.createElement("a", {
-    href: "#",
-    onClick: e => {
-      e.preventDefault();
-      close();
-      onProdutoClick && onProdutoClick();
-    }
+    href: "produto.html",
+    onClick: close
   }, "Produtos"), /*#__PURE__*/React.createElement("a", {
-    href: "#",
-    onClick: e => {
-      e.preventDefault();
-      close();
-      onPortfolioClick && onPortfolioClick();
-    }
+    href: "portfolio.html",
+    onClick: close
   }, "Portf\xF3lio"), /*#__PURE__*/React.createElement("a", {
     href: "index.html#depoimentos",
     onClick: close
@@ -1383,336 +1373,6 @@ function Newsletter() {
   }, "Cadastrar"))));
 }
 
-// ────────────────────────────────────────────────────────────────────────
-// PortfolioModal — grade de obras com filtros
-// ────────────────────────────────────────────────────────────────────────
-const WORKS = [{
-  cat: "cozinha",
-  t: "Residência Itaim",
-  stone: "Calacatta Oro",
-  img: window.STONE_IMG?.slabWhite || ""
-}, {
-  cat: "banheiro",
-  t: "Master Suite Higienópolis",
-  stone: "Mont Blanc",
-  img: window.STONE_IMG?.slabVerde || ""
-}, {
-  cat: "cozinha",
-  t: "Apartamento Vila Madalena",
-  stone: "Nero Marquina",
-  img: window.STONE_IMG?.slabDark || ""
-}, {
-  cat: "fachada",
-  t: "Casa Granja Viana",
-  stone: "Travertino Romano",
-  img: window.STONE_IMG?.slabTrav || ""
-}, {
-  cat: "cozinha",
-  t: "Cozinha Gourmet Alto de Pinheiros",
-  stone: "Quartzito Patagonia",
-  img: window.STONE_IMG?.slabBeige || ""
-}, {
-  cat: "banheiro",
-  t: "Lavabo Jardins",
-  stone: "Onyx Verde",
-  img: window.STONE_IMG?.slabOnyx || ""
-}, {
-  cat: "escada",
-  t: "Escada Vila Nova",
-  stone: "Granito Preto São Gabriel",
-  img: window.STONE_IMG?.roomBath || ""
-}, {
-  cat: "comercial",
-  t: "Hotel Boutique Trancoso",
-  stone: "Calacatta Viola",
-  img: window.STONE_IMG?.roomLiving || ""
-}, {
-  cat: "cozinha",
-  t: "Penthouse Faria Lima",
-  stone: "Taj Mahal",
-  img: window.STONE_IMG?.roomKitchen || ""
-}, {
-  cat: "fachada",
-  t: "Fachada Brooklin",
-  stone: "Granito Cinza Andorinha",
-  img: window.STONE_IMG?.roomFacade || ""
-}, {
-  cat: "comercial",
-  t: "Restaurante Pinheiros",
-  stone: "Quartzito Macaúbas",
-  img: window.STONE_IMG?.roomHotel || ""
-}, {
-  cat: "banheiro",
-  t: "Suíte Master Vila Nova",
-  stone: "Calacatta Borghini",
-  img: window.STONE_IMG?.slabRosa || ""
-}];
-const PORT_FILTERS = [{
-  k: "all",
-  label: "Todos"
-}, {
-  k: "cozinha",
-  label: "Cozinhas"
-}, {
-  k: "banheiro",
-  label: "Banheiros"
-}, {
-  k: "escada",
-  label: "Escadas"
-}, {
-  k: "fachada",
-  label: "Fachadas"
-}, {
-  k: "comercial",
-  label: "Comercial"
-}];
-function PortfolioModal({
-  open,
-  onClose,
-  onQuote,
-  onProduto
-}) {
-  const [filter, setFilter] = useState("all");
-  useEffect(() => {
-    if (open) document.body.style.overflow = "hidden";else document.body.style.overflow = "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-  useEffect(() => {
-    const onKey = e => {
-      if (e.key === "Escape" && open) onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-  const items = filter === "all" ? WORKS : WORKS.filter(w => w.cat === filter);
-  if (!open) return null;
-  return /*#__PURE__*/React.createElement("div", {
-    className: "page-modal-overlay",
-    onClick: onClose
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "page-modal",
-    onClick: e => e.stopPropagation()
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "page-modal-head"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "eyebrow",
-    style: {
-      marginBottom: 4
-    }
-  }, "\u2014 Nossos projetos"), /*#__PURE__*/React.createElement("h2", {
-    style: {
-      margin: 0
-    }
-  }, "Portf\xF3lio")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 12,
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary btn-sm",
-    onClick: () => {
-      onClose();
-      onQuote && onQuote();
-    }
-  }, "Solicitar Or\xE7amento"), /*#__PURE__*/React.createElement("button", {
-    className: "page-modal-close",
-    onClick: onClose,
-    "aria-label": "Fechar"
-  }, "\xD7"))), /*#__PURE__*/React.createElement("div", {
-    className: "page-modal-body"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "filters",
-    style: {
-      marginBottom: 32
-    }
-  }, PORT_FILTERS.map(f => /*#__PURE__*/React.createElement("button", {
-    key: f.k,
-    className: `filter-pill ${filter === f.k ? "is-on" : ""}`,
-    onClick: () => setFilter(f.k)
-  }, f.label))), /*#__PURE__*/React.createElement("div", {
-    className: "work-grid"
-  }, items.map((w, i) => /*#__PURE__*/React.createElement("a", {
-    key: i,
-    className: "work-card",
-    href: "#",
-    onClick: e => {
-      e.preventDefault();
-      onClose();
-      onProduto && onProduto(w);
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "work-img",
-    style: {
-      backgroundImage: `url(${w.img})`
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "work-meta"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-    className: "work-tag"
-  }, "\u2014 ", w.stone), /*#__PURE__*/React.createElement("h3", {
-    className: "work-t"
-  }, w.t)), /*#__PURE__*/React.createElement("span", {
-    className: "work-arrow"
-  }, /*#__PURE__*/React.createElement(Icon.Arrow, null)))))))));
-}
-
-// ────────────────────────────────────────────────────────────────────────
-// ProdutoModal — detalhe de pedra/produto
-// ────────────────────────────────────────────────────────────────────────
-const PRODUTO_DEFAULT = {
-  nome: "Calacatta Oro",
-  origem: "Carrara, Itália",
-  tipo: "Mármore",
-  desc: "Mármore italiano extraído nas montanhas de Carrara. Fundo branco-puro, veios dourados e cinza-grafite que desenham movimentos longos e nítidos. Ideal para bancadas, lavatórios esculpidos e revestimentos de destaque.",
-  imgs: []
-};
-const FINISHES = ["Polido", "Levigado", "Escovado", "Acetinado"];
-const PROD_TABS = [{
-  k: "desc",
-  label: "Descrição"
-}, {
-  k: "uso",
-  label: "Usos"
-}, {
-  k: "cuid",
-  label: "Cuidados"
-}, {
-  k: "tec",
-  label: "Ficha técnica"
-}];
-function ProdutoModal({
-  open,
-  onClose,
-  onQuote,
-  onPortfolio,
-  produto
-}) {
-  const [finish, setFinish] = useState("Polido");
-  const [tab, setTab] = useState("desc");
-  const p = produto || PRODUTO_DEFAULT;
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-      setTab("desc");
-      setFinish("Polido");
-    } else document.body.style.overflow = "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-  useEffect(() => {
-    const onKey = e => {
-      if (e.key === "Escape" && open) onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-  if (!open) return null;
-  return /*#__PURE__*/React.createElement("div", {
-    className: "page-modal-overlay",
-    onClick: onClose
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "page-modal",
-    onClick: e => e.stopPropagation()
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "page-modal-head"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "eyebrow",
-    style: {
-      marginBottom: 4
-    }
-  }, "\u2014 ", p.tipo, " \xB7 ", p.origem), /*#__PURE__*/React.createElement("h2", {
-    style: {
-      margin: 0
-    }
-  }, p.nome || p.stone || "Calacatta Oro")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 12,
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-outline btn-sm",
-    onClick: () => {
-      onClose();
-      onPortfolio && onPortfolio();
-    }
-  }, "Ver no portf\xF3lio"), /*#__PURE__*/React.createElement("button", {
-    className: "page-modal-close",
-    onClick: onClose,
-    "aria-label": "Fechar"
-  }, "\xD7"))), /*#__PURE__*/React.createElement("div", {
-    className: "page-modal-body"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "produto-modal-top"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "produto-modal-img",
-    style: {
-      backgroundImage: `url(${p.img || ""})`
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "produto-modal-info"
-  }, /*#__PURE__*/React.createElement("p", {
-    className: "lead",
-    style: {
-      marginTop: 0
-    }
-  }, p.desc || PRODUTO_DEFAULT.desc), /*#__PURE__*/React.createElement("div", {
-    className: "product-spec"
-  }, [["Origem", p.origem || "Carrara, Itália"], ["Tipo", p.tipo || "Mármore"], ["Espessura", "2 cm · 3 cm"], ["Dureza (Mohs)", "3 — 4"], ["Absorção", "0,2%"]].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
-    key: k,
-    className: "product-spec-row"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "product-spec-label"
-  }, k), /*#__PURE__*/React.createElement("span", {
-    className: "product-spec-val"
-  }, v)))), /*#__PURE__*/React.createElement("div", {
-    className: "product-finish"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "field-label"
-  }, "Acabamento"), /*#__PURE__*/React.createElement("div", {
-    className: "product-finish-options"
-  }, FINISHES.map(f => /*#__PURE__*/React.createElement("button", {
-    key: f,
-    className: `product-finish-pill ${finish === f ? "is-on" : ""}`,
-    onClick: () => setFinish(f)
-  }, f)))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 24
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary",
-    onClick: () => {
-      onClose();
-      onQuote && onQuote();
-    }
-  }, "Solicitar Or\xE7amento ", /*#__PURE__*/React.createElement(Icon.Arrow, null))))), /*#__PURE__*/React.createElement("div", {
-    className: "product-tabs",
-    style: {
-      marginTop: 40
-    }
-  }, PROD_TABS.map(b => /*#__PURE__*/React.createElement("button", {
-    key: b.k,
-    className: `product-tab ${tab === b.k ? "is-on" : ""}`,
-    onClick: () => setTab(b.k)
-  }, b.label))), /*#__PURE__*/React.createElement("div", {
-    className: "product-tab-body"
-  }, tab === "desc" && /*#__PURE__*/React.createElement("p", null, "M\xE1rmore de origem italiana com fundo branco-puro e veia\xE7\xE3o dourada e cinza-grafite irrepet\xEDvel. Trabalhamos com chapas inteiras da pedreira \u2014 voc\xEA visita o galp\xE3o e escolhe o bloco antes do corte."), tab === "uso" && /*#__PURE__*/React.createElement("ul", {
-    style: {
-      paddingLeft: 20,
-      lineHeight: 2
-    }
-  }, /*#__PURE__*/React.createElement("li", null, "Bancadas de cozinha"), /*#__PURE__*/React.createElement("li", null, "Lavat\xF3rios e banheiros"), /*#__PURE__*/React.createElement("li", null, "Revestimentos verticais"), /*#__PURE__*/React.createElement("li", null, "Mesas e ilhas centrais"), /*#__PURE__*/React.createElement("li", null, "Pain\xE9is decorativos")), tab === "cuid" && /*#__PURE__*/React.createElement("p", null, "Limpeza com pano \xFAmido e sab\xE3o neutro. Selante hidro-oleof\xF3bico a cada 12\u201318 meses. Evite \xE1cidos (lim\xE3o, vinagre) e abrasivos."), tab === "tec" && /*#__PURE__*/React.createElement("ul", {
-    style: {
-      paddingLeft: 20,
-      lineHeight: 2
-    }
-  }, /*#__PURE__*/React.createElement("li", null, "Densidade: 2.700 kg/m\xB3"), /*#__PURE__*/React.createElement("li", null, "Resist\xEAncia \xE0 compress\xE3o: 110 MPa"), /*#__PURE__*/React.createElement("li", null, "Dureza Mohs: 3\u20134"), /*#__PURE__*/React.createElement("li", null, "Norma: ABNT NBR 15012"))))));
-}
-
 // expose globals
 Object.assign(window, {
   Icon,
@@ -1724,9 +1384,7 @@ Object.assign(window, {
   Floaters,
   QuoteModal,
   Newsletter,
-  useReveal,
-  PortfolioModal,
-  ProdutoModal
+  useReveal
 });
 
 // === home-sections.jsx ===
@@ -2148,13 +1806,7 @@ function Differentials() {
 
 // ────────────────── PORTFOLIO grid (preview) ──────────────────
 const PORTFOLIO_IMGS = ["assets/stones/04-verde.svg", "assets/stones/05-travertino.svg", "assets/stones/06-graniteBrn.svg", "assets/stones/07-onyxAmber.svg", "assets/stones/08-patagonia.svg", "assets/stones/09-bege.svg", "assets/stones/10-graniteGry.svg", "assets/stones/11-rosaPort.svg"];
-function PortfolioGrid({
-  onPortfolioClick
-}) {
-  const open = e => {
-    e.preventDefault();
-    onPortfolioClick && onPortfolioClick();
-  };
+function PortfolioGrid() {
   return /*#__PURE__*/React.createElement("section", {
     className: "section-pad section-portfolio",
     id: "portfolio"
@@ -2169,8 +1821,7 @@ function PortfolioGrid({
   }, PORTFOLIO_IMGS.map((src, i) => /*#__PURE__*/React.createElement("a", {
     key: i,
     className: "portfolio-cell",
-    href: "#",
-    onClick: open,
+    href: "portfolio.html",
     style: {
       backgroundImage: `url(${src})`
     }
@@ -2182,9 +1833,9 @@ function PortfolioGrid({
       textAlign: "center",
       marginTop: 50
     }
-  }, /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("a", {
     className: "btn btn-outline",
-    onClick: onPortfolioClick
+    href: "portfolio.html"
   }, "Ver portf\xF3lio completo")));
 }
 
@@ -2300,17 +1951,14 @@ Object.assign(window, {
 });
 
 // === app ===
-const TWEAK_DEFAULTS = {
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "palette": "moss",
   "typepair": "tech",
   "hero": "full"
-};
+} /*EDITMODE-END*/;
 function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [portfolioOpen, setPortfolioOpen] = React.useState(false);
-  const [produtoOpen, setProdutoOpen] = React.useState(false);
-  const [produtoAtivo, setProdutoAtivo] = React.useState(null);
   React.useEffect(() => {
     document.documentElement.setAttribute("data-palette", t.palette);
     document.documentElement.setAttribute("data-typepair", t.typepair);
@@ -2318,42 +1966,17 @@ function App() {
   useReveal();
   const Hero = t.hero === "split" ? HeroSplit : t.hero === "editorial" ? HeroEditorial : HeroFull;
   const heroTransparent = t.hero === "full";
-  const openProduto = obra => {
-    setProdutoAtivo(obra || null);
-    setProdutoOpen(true);
-  };
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Topbar, null), /*#__PURE__*/React.createElement(Header, {
     active: "home",
     transparent: heroTransparent,
-    onCTAClick: () => setModalOpen(true),
-    onPortfolioClick: () => setPortfolioOpen(true),
-    onProdutoClick: () => openProduto(null)
+    onCTAClick: () => setModalOpen(true)
   }), /*#__PURE__*/React.createElement(Hero, {
     onCTA: () => setModalOpen(true)
   }), /*#__PURE__*/React.createElement(About, {
     onCTA: () => setModalOpen(true)
-  }), /*#__PURE__*/React.createElement(Services, null), /*#__PURE__*/React.createElement(Differentials, null), /*#__PURE__*/React.createElement(PortfolioGrid, {
-    onPortfolioClick: () => setPortfolioOpen(true)
-  }), /*#__PURE__*/React.createElement(Testimonials, null), /*#__PURE__*/React.createElement(Blog, null), /*#__PURE__*/React.createElement(Newsletter, null), /*#__PURE__*/React.createElement(Footer, null), /*#__PURE__*/React.createElement(Floaters, null), /*#__PURE__*/React.createElement(QuoteModal, {
+  }), /*#__PURE__*/React.createElement(Services, null), /*#__PURE__*/React.createElement(Differentials, null), /*#__PURE__*/React.createElement(PortfolioGrid, null), /*#__PURE__*/React.createElement(Testimonials, null), /*#__PURE__*/React.createElement(Blog, null), /*#__PURE__*/React.createElement(Newsletter, null), /*#__PURE__*/React.createElement(Footer, null), /*#__PURE__*/React.createElement(Floaters, null), /*#__PURE__*/React.createElement(QuoteModal, {
     open: modalOpen,
     onClose: () => setModalOpen(false)
-  }), /*#__PURE__*/React.createElement(PortfolioModal, {
-    open: portfolioOpen,
-    onClose: () => setPortfolioOpen(false),
-    onQuote: () => setModalOpen(true),
-    onProduto: obra => {
-      setPortfolioOpen(false);
-      openProduto(obra);
-    }
-  }), /*#__PURE__*/React.createElement(ProdutoModal, {
-    open: produtoOpen,
-    onClose: () => setProdutoOpen(false),
-    onQuote: () => setModalOpen(true),
-    onPortfolio: () => {
-      setProdutoOpen(false);
-      setPortfolioOpen(true);
-    },
-    produto: produtoAtivo
   }), /*#__PURE__*/React.createElement(TweaksPanel, {
     title: "Tweaks"
   }, /*#__PURE__*/React.createElement(TweakSection, {
